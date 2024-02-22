@@ -20,8 +20,8 @@ public class SimpleJDBCRepository {
     private PreparedStatement ps = null;
     private Statement st = null;
 
-    private static final String createUserSQL = "insert into myusers (id, firstname, lastname, age) values (?,?,?,?)";
-    private static final String updateUserSQL = "update myusers set id=?, firstname=?, lastname=?, age=?";
+    private static final String createUserSQL = "insert into myusers (firstname, lastname, age) values (?,?,?)";
+    private static final String updateUserSQL = "update myusers set firstname=?, lastname=?, age=? where id=?";
     private static final String deleteUser = "delete from myusers where id=?";
     private static final String findUserByIdSQL = "select * from myusers where id=?";
     private static final String findUserByNameSQL = "select * from myusers where firstname=?";
@@ -160,10 +160,10 @@ public class SimpleJDBCRepository {
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(updateUserSQL);
-            ps.setString(2, user.getFirstName());
-            ps.setString(3, user.getLastName());
-            ps.setInt(4, user.getAge());
-            ps.setLong(1, user.getId());
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setInt(3, user.getAge());
+            ps.setLong(4, user.getId());
             ps.executeUpdate();
             return user;
         } catch (SQLException e) {
