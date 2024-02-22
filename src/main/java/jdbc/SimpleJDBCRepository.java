@@ -62,10 +62,9 @@ public class SimpleJDBCRepository {
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(createUserSQL, Statement.RETURN_GENERATED_KEYS);
-            int i = 0;
-            ps.setString(++i, user.getFirstName());
-            ps.setString(++i, user.getLastName());
-            ps.setInt(++i, user.getAge());
+            ps.setString(1, user.getFirstName());
+            ps.setString(2, user.getLastName());
+            ps.setInt(3, user.getAge());
 
             int affectedRows = ps.executeUpdate();
             if (affectedRows == 0) {
@@ -90,7 +89,6 @@ public class SimpleJDBCRepository {
 
 
     public User findUserById(Long userId) {
-        userId = 1L;
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -162,10 +160,10 @@ public class SimpleJDBCRepository {
         try {
             connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(updateUserSQL);
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setInt(3, user.getAge());
-            ps.setLong(4, user.getId());
+            ps.setString(2, user.getFirstName());
+            ps.setString(3, user.getLastName());
+            ps.setInt(4, user.getAge());
+            ps.setLong(1, user.getId());
             ps.executeUpdate();
             return user;
         } catch (SQLException e) {
@@ -200,7 +198,6 @@ public class SimpleJDBCRepository {
         user.setAge(rs.getInt("age"));
         return user;
     }
-
     private void closeResources() {
         try {
             if (ps != null) {
@@ -212,12 +209,5 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    private void newUser(User user){
-        user.setId(2L);
-        user.setAge(19);
-        user.setFirstName("Alex");
-        user.setLastName("Bruks");
     }
 }
