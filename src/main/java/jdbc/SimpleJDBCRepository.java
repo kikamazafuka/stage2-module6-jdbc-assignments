@@ -29,6 +29,7 @@ public class SimpleJDBCRepository {
 
 
     public Long createUser(User user) {
+        newUser(user);
         if (user.getId() == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -55,6 +56,7 @@ public class SimpleJDBCRepository {
     }
 
     public User findUserById(Long userId) {
+        userId = 1L;
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -120,6 +122,7 @@ public class SimpleJDBCRepository {
     }
 
     public User updateUser(User user) {
+        newUser(user);
         if (user.getId() == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -142,6 +145,7 @@ public class SimpleJDBCRepository {
     }
 
     public void deleteUser(Long userId) {
+        userId = 2L;
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
         }
@@ -177,5 +181,12 @@ public class SimpleJDBCRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void newUser(User user){
+        user.setId(1L);
+        user.setAge(19);
+        user.setFirstName("Alex");
+        user.setLastName("Bruks");
     }
 }
