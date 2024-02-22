@@ -28,13 +28,12 @@ public class SimpleJDBCRepository {
     private static final String findAllUserSQL = "select * from myusers";
 
 
-    public Long createUser() {
+    public Long createUser(User user) {
         try {
             connection = CustomDataSource.getInstance().getConnection();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        User user = new User();
         try {
             ps = connection.prepareStatement(createUserSQL, Statement.RETURN_GENERATED_KEYS);
             int i = 0;
@@ -125,8 +124,7 @@ public class SimpleJDBCRepository {
         return users;
     }
 
-    public User updateUser() {
-        User user = new User();
+    public User updateUser(User user) {
         try {
             connection = CustomDataSource.getInstance().getConnection();
         } catch (SQLException e) {
