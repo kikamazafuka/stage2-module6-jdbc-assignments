@@ -53,11 +53,7 @@ public class CustomDataSource implements DataSource {
         if (instance == null) {
             synchronized (CustomDataSource.class) {
                 if (instance == null) {
-                    instance = new CustomDataSource(
-                            driver,
-                            url,
-                            username,
-                            password);
+                    instance = new CustomDataSource(driver, url, username, password);
                 }
             }
         }
