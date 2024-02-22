@@ -26,56 +26,68 @@ public class CustomDataSource implements DataSource {
     private final String name;
     private final String password;
 
+//    private CustomDataSource(String driver, String url, String password, String name) {
+//        this.driver = driver;
+//        this.url = url;
+//        this.name = name;
+//        this.password = password;
+//        this.customConnector = new CustomConnector();
+//
+//    }
     private CustomDataSource(String driver, String url, String password, String name) {
         this.driver = driver;
         this.url = url;
         this.name = name;
         this.password = password;
         this.customConnector = new CustomConnector();
-
-    }
-
-    public static CustomDataSource getInstance() {
-        Properties properties = new Properties();
-        try (InputStream input = CustomDataSource.class.getClassLoader().getResourceAsStream("app.properties")){
-            properties.load(input);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        try {
+            Class.forName(driver);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("Error loading database driver", e);
         }
-        String driver = properties.getProperty("postgres.driver");
-        String url = properties.getProperty("postgres.url");
-        String username = properties.getProperty("postgres.name");
-        String password = properties.getProperty("postgres.password");
-        if (instance == null) {
-            synchronized (CustomDataSource.class) {
-                if (instance == null) {
-                    instance = new CustomDataSource(
-                            driver,
-                            url,
-                            username,
-                            password);
-                }
-            }
-        }
-        return instance;
     }
 
 //    public static CustomDataSource getInstance() {
+//        Properties properties = new Properties();
+//        try (InputStream input = CustomDataSource.class.getClassLoader().getResourceAsStream("app.properties")){
+//            properties.load(input);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//        String driver = properties.getProperty("postgres.driver");
+//        String url = properties.getProperty("postgres.url");
+//        String username = properties.getProperty("postgres.name");
+//        String password = properties.getProperty("postgres.password");
 //        if (instance == null) {
-//            throw new IllegalStateException("DataSource not initialized. Call initializeInstance first.");
+//            synchronized (CustomDataSource.class) {
+//                if (instance == null) {
+//                    instance = new CustomDataSource(
+//                            driver,
+//                            url,
+//                            username,
+//                            password);
+//                }
+//            }
 //        }
 //        return instance;
 //    }
 
-//    public static void initializeInstance(String driver, String url, String name, String password) {
-//        if (instance == null) {
-//            synchronized (CustomDataSource.class) {
-//                if (instance == null) {
-//                    instance = new CustomDataSource(driver, url, password, name);
-//                }
-//            }
-//        }
-//    }
+    public static CustomDataSource getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("DataSource not initialized. Call initializeInstance first.");
+        }
+        return instance;
+    }
+
+    public static void initializeInstance(String driver, String url, String name, String password) {
+        if (instance == null) {
+            synchronized (CustomDataSource.class) {
+                if (instance == null) {
+                    instance = new CustomDataSource(driver, url, password, name);
+                }
+            }
+        }
+    }
 
     @Override
     public Connection getConnection() throws SQLException {
