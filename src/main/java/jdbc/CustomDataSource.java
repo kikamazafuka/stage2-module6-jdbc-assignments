@@ -5,8 +5,8 @@ import javax.sql.DataSource;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
 @Setter
 public class CustomDataSource implements DataSource {
 
-    private static Properties properties = new Properties();
+
     private final CustomConnector customConnector;
     private static volatile CustomDataSource instance;
     private final String driver;
@@ -36,8 +36,9 @@ public class CustomDataSource implements DataSource {
     }
 
     public static CustomDataSource getInstance() {
-        try {
-            properties.load(new FileInputStream("app.properties"));
+        Properties properties = new Properties();
+        try (InputStream input = CustomDataSource.class.getClassLoader().getResourceAsStream("app.properties")){
+            properties.load(input);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,6 +59,23 @@ public class CustomDataSource implements DataSource {
         }
         return instance;
     }
+
+//    public static CustomDataSource getInstance() {
+//        if (instance == null) {
+//            throw new IllegalStateException("DataSource not initialized. Call initializeInstance first.");
+//        }
+//        return instance;
+//    }
+
+//    public static void initializeInstance(String driver, String url, String name, String password) {
+//        if (instance == null) {
+//            synchronized (CustomDataSource.class) {
+//                if (instance == null) {
+//                    instance = new CustomDataSource(driver, url, password, name);
+//                }
+//            }
+//        }
+//    }
 
     @Override
     public Connection getConnection() throws SQLException {
