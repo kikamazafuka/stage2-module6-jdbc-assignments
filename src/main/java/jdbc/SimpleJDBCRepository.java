@@ -29,12 +29,11 @@ public class SimpleJDBCRepository {
 
 
     public Long createUser(User user) {
-        try {
-            connection = CustomDataSource.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (user.getId() == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
         }
         try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(createUserSQL, Statement.RETURN_GENERATED_KEYS);
             int i = 0;
             ps.setLong(++i, user.getId());
@@ -56,12 +55,11 @@ public class SimpleJDBCRepository {
     }
 
     public User findUserById(Long userId) {
-        try {
-            connection = CustomDataSource.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
         }
         try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(findUserByIdSQL);
             ps.setLong(1, userId);
             ResultSet rs = ps.executeQuery();
@@ -79,12 +77,11 @@ public class SimpleJDBCRepository {
     }
 
     public User findUserByName(String userName) {
-        try {
-            connection = CustomDataSource.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (userName == null) {
+            throw new IllegalArgumentException("User Name cannot be null");
         }
         try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(findUserByNameSQL);
             ps.setString(1, userName);
             ResultSet rs = ps.executeQuery();
@@ -102,18 +99,16 @@ public class SimpleJDBCRepository {
     }
 
     public List<User> findAllUser() {
-        try {
-            connection = CustomDataSource.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
         List<User> users = new ArrayList<>();
         try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(findAllUserSQL);
             ResultSet rs = ps.executeQuery();
             while (rs.next()){
                 User user = mapResultSetToUser(rs);
-                users.add(user);
+                if (user.getId()!=null) {
+                    users.add(user);
+                }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -125,12 +120,11 @@ public class SimpleJDBCRepository {
     }
 
     public User updateUser(User user) {
-        try {
-            connection = CustomDataSource.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (user.getId() == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
         }
         try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(updateUserSQL);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getLastName());
@@ -148,12 +142,11 @@ public class SimpleJDBCRepository {
     }
 
     public void deleteUser(Long userId) {
-        try {
-            connection = CustomDataSource.getInstance().getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (userId == null) {
+            throw new IllegalArgumentException("User ID cannot be null");
         }
         try {
+            connection = CustomDataSource.getInstance().getConnection();
             ps = connection.prepareStatement(deleteUser);
             ps.setLong(1, userId);
             ps.executeUpdate();
