@@ -125,7 +125,8 @@ public class SimpleJDBCRepository {
         return users;
     }
 
-    public User updateUser(User user) {
+    public User updateUser() {
+        User user = new User();
         try {
             connection = CustomDataSource.getInstance().getConnection();
         } catch (SQLException e) {
@@ -148,7 +149,7 @@ public class SimpleJDBCRepository {
 
     }
 
-    private void deleteUser(Long userId) {
+    public void deleteUser(Long userId) {
         try {
             connection = CustomDataSource.getInstance().getConnection();
         } catch (SQLException e) {
