@@ -60,22 +60,6 @@ public class CustomDataSource implements DataSource {
         return instance;
     }
 
-//    public static CustomDataSource getInstance() {
-//        if (instance == null) {
-//            throw new IllegalStateException("DataSource not initialized. Call initializeInstance first.");
-//        }
-//        return instance;
-//    }
-//
-//    public static void initializeInstance(String driver, String url, String name, String password) {
-//        if (instance == null) {
-//            synchronized (CustomDataSource.class) {
-//                if (instance == null) {
-//                    instance = new CustomDataSource(driver, url, password, name);
-//                }
-//            }
-//        }
-//    }
 
     @Override
     public Connection getConnection() throws SQLException {
